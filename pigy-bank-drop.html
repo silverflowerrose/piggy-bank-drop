@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coin Drop Game</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        #game-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .coin {
+            width: 80px;
+            height: 80px;
+            display: inline-block;
+            margin: 10px;
+            cursor: grab;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transition: transform 0.2s;
+        }
+        .coin:hover {
+            transform: scale(1.1);
+        }
+        .coin:active {
+            cursor: grabbing;
+        }
+        #piggy-bank {
+            width: 300%;
+            max-width: 320px;
+            height: 250px;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-image: url('https://i.imgur.com/BL8z7xf.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        #score {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Drop the coins into the piggy bank!</h1>
+    <div id="game-container">
+        <div id="piggy-bank" 
+             ondrop="drop(event)" 
+             ondragover="allowDrop(event)">
+        </div>
+    </div>
+    <div>
+        <div id="coin1" class="coin" draggable="true" ondragstart="drag(event)" 
+             style="background-image: url('https://i.imgur.com/58x04Ub.png');">
+        </div>
+        <div id="coin2" class="coin" draggable="true" ondragstart="drag(event)"
+             style="background-image: url('https://i.imgur.com/mXFtpnW.png');">
+        </div>
+        <div id="coin3" class="coin" draggable="true" ondragstart="drag(event)"
+             style="background-image: url('https://i.imgur.com/qLQBfo0.png');">
+        </div>
+        <div id="coin4" class="coin" draggable="true" ondragstart="drag(event)"
+             style="background-image: url('https://i.imgur.com/pOWhGRM.png');">
+        </div>
+        <div id="coin5" class="coin" draggable="true" ondragstart="drag(event)"
+             style="background-image: url('https://i.imgur.com/kIQMGai.png');">
+        </div>
+        <div id="coin6" class="coin" draggable="true" ondragstart="drag(event)"
+             style="background-image: url('https://i.imgur.com/Yi7cnZa.png');">
+        </div>
+    </div>
+    
+    <div id="score">Total: $0.00</div>
+    
+    <script>
+        let total = 0;
+        const coinValues = {
+            'coin1': 0.01,
+            'coin2': 0.05,
+            'coin3': 0.10,
+            'coin4': 0.25,
+            'coin5': 1.00,
+            'coin6': 2.00
+        };
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            let coinId = event.dataTransfer.getData("text");
+            let coin = document.getElementById(coinId);
+            if (coin) {
+                coin.style.opacity = '0';
+                setTimeout(() => coin.remove(), 300);
+                total += coinValues[coinId];
+                updateScore();
+                playDropSound();
+            }
+        }
+
+        function updateScore() {
+            document.getElementById("score").textContent = `Total: $${total.toFixed(2)}`;
+        }
+
+        function playDropSound() {
+            const audio = new Audio('https://raw.githubusercontent.com/silverflowerrose/coindropfile/main/coin-drop-82392.mp3');
+            audio.play();
+        }
+    </script>
+</body>
+</html>
